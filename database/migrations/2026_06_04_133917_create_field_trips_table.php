@@ -13,6 +13,17 @@ return new class extends Migration
     {
         Schema::create('field_trips', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->text('description');
+            $table->string('location');
+            $table->date('begin_date');
+            $table->date('end_date');
+            $table->timestamp('departure_time');
+            $table->timestamp('return_time');
+            $table->decimal('cost', 8, 2);
+            $table->date('payment_deadline');
+            $table->foreignId('class_id')->constrained();
+            $table->enum('status', ['open', 'completed', 'cancelled'])->default('open'); // OPEN - COMPLETED - CANCELLED
             $table->timestamps();
         });
     }
