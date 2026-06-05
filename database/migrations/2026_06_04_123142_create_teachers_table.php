@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->string('password');
             $table->foreignId('role_id')->constrained();
+            $table->rememberToken();
             $table->timestamps();
         });
     }
