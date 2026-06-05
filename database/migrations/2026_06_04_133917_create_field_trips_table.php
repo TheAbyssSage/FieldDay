@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('return_time');
             $table->decimal('cost', 8, 2);
             $table->date('payment_deadline');
-            $table->foreignId('class_id')->constrained();
+            $table->foreignId('classroom_id')->constrained();
             $table->enum('status', ['open', 'completed', 'cancelled'])->default('open'); // OPEN - COMPLETED - CANCELLED
             $table->timestamps();
         });
