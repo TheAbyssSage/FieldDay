@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('guardian_student', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('guardian_id')->constrained()->onDelete('cascade');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
+            $table->unique(['guardian_id', 'student_id']);
             $table->timestamps();
         });
     }
