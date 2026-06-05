@@ -21,6 +21,11 @@ class Teacher extends Model
         return $this->belongsTo(Role::class);
     }
 
+    public function classroom()
+    {
+        return $this->hasOne(Classroom::class);
+    }
+
     protected $hidden = [
         'password',
     ];

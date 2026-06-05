@@ -11,7 +11,8 @@ class Guardian extends Model
         'last_name',
         'email',
         'phone_number',
-        'password'
+        'password',
+        'role_id',
     ];
 
     protected $hidden = [
@@ -23,5 +24,20 @@ class Guardian extends Model
         return [
             'password' => 'hashed',
         ];
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'guardian_student');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 }
