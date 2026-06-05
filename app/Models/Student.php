@@ -4,7 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Student extends Model
+class Role extends Model
 {
-    //
+    protected $fillable = [
+        'name',
+    ];
+
+    public function teachers()
+    {
+        return $this->hasMany(Teacher::class);
+    }
+
+    public function guardians()
+    {
+        return $this->hasMany(Guardian::class);
+    }
 }
