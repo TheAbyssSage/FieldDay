@@ -20,7 +20,7 @@ class ClassroomSeeder extends Seeder
 
         foreach ($teachers as $teacher) {
             Classroom::create([
-                'name' => fake()->randomElement(['A', 'B', 'C', 'D', 'E']) . fake()->numberBetween(1, 9),
+                'name' => fake()->unique()->randomElement(['A', 'B', 'C', 'D', 'E']) . fake()->numberBetween(1, 9),
                 'teacher_id' => $teacher->id,
             ]);
         }
