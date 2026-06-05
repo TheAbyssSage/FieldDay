@@ -19,7 +19,7 @@ class GuardianSeeder extends Seeder
     {
         $role = Role::where('name', 'guardian')->first();
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             Guardian::create([
                 'first_name' => fake()->firstName(),
                 'last_name' => fake()->lastName(),

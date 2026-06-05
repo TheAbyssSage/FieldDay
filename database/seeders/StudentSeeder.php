@@ -21,7 +21,7 @@ class StudentSeeder extends Seeder
         $guardians = Guardian::all();
 
         foreach ($classrooms as $classroom) {
-            for ($i = 0; $i < fake()->numberBetween(5, 15); $i++) {
+            for ($i = 0; $i < fake()->numberBetween(5, 40); $i++) {
                 $student = Student::create([
                     'first_name' => fake()->firstName(),
                     'last_name' => fake()->lastName(),
