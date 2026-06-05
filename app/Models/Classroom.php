@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Classroom extends Model
 {
@@ -17,12 +18,12 @@ class Classroom extends Model
         return $this->belongsTo(Teacher::class);
     }
 
-    public function students()
+    public function students(): HasMany
     {
         return $this->hasMany(Student::class);
     }
 
-    public function fieldTrips()
+    public function fieldTrips(): HasMany
     {
         return $this->hasMany(FieldTrip::class);
     }

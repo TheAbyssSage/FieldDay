@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Role extends Model
 {
@@ -10,12 +11,12 @@ class Role extends Model
         'name',
     ];
 
-    public function teachers()
+    public function teachers(): HasMany
     {
         return $this->hasMany(Teacher::class);
     }
 
-    public function guardians()
+    public function guardians(): HasMany
     {
         return $this->hasMany(Guardian::class);
     }
