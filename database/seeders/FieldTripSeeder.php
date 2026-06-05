@@ -19,10 +19,11 @@ class FieldTripSeeder extends Seeder
         $classrooms = Classroom::all();
 
         foreach ($classrooms as $classroom) {
-            $beginDate = fake()->dateTimeBetween('+1 week', '+3 months');
-            $endDate = (clone $beginDate)->modify('+'.fake()->numberBetween(0, 3).' days');
+            for ($i = 0; $i < fake()->numberBetween(3, 5); $i++) {
+                $beginDate = fake()->dateTimeBetween('+1 week', '+6 months');
+                $endDate = (clone $beginDate)->modify('+'.fake()->numberBetween(0, 3).' days');
 
-            FieldTrip::create([
+                FieldTrip::create([
                 'title' => fake()->sentence(3),
                 'description' => fake()->paragraph(),
                 'location' => fake()->city(),
@@ -34,7 +35,8 @@ class FieldTripSeeder extends Seeder
                 'payment_deadline' => fake()->dateTimeBetween('now', $beginDate)->format('Y-m-d'),
                 'classroom_id' => $classroom->id,
                 'status' => fake()->randomElement(['open', 'completed', 'cancelled']),
-            ]);
+                ]);
+            }
         }
     }
 }
