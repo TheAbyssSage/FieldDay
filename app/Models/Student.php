@@ -4,19 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class Student extends Model
 {
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
+        'date_of_birth',
+        'classroom_id',
     ];
 
-    public function teachers()
+    public function classroom()
     {
-        return $this->hasMany(Teacher::class);
+        return $this->belongsTo(Classroom::class);
     }
 
     public function guardians()
     {
-        return $this->hasMany(Guardian::class);
+        return $this->belongsToMany(Guardian::class, 'guardian_student');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 }
