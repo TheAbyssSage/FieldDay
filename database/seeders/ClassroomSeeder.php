@@ -18,9 +18,18 @@ class ClassroomSeeder extends Seeder
     {
         $teachers = Teacher::all();
 
-        foreach ($teachers as $teacher) {
+        foreach ($teachers as $i => $teacher) {
+            // intdiv($i, 5) — integer division, no decimals
+            // +1 so grades start at 1 instead of 0
+            $grade = intdiv($i, 5) + 1;
+
+            // chr(65 + ($i % 5)) — converts a number to a letter
+            // 65 is the ASCII code for 'A', 66 = 'B', 67 = 'C', etc.
+            $section = chr(65 + ($i % 5));
+
             Classroom::create([
-                'name' => fake()->unique()->randomElement(['A', 'B', 'C', 'D', 'E']) . fake()->numberBetween(1, 9),
+                // Produces names like: Grade-1A, ..., Grade-1E -> Grade-2A, ..., Grade-2E, etc.
+                'name' => "Grade-{$grade}{$section}",
                 'teacher_id' => $teacher->id,
             ]);
         }
