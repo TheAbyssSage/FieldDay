@@ -23,11 +23,15 @@ return new class extends Migration
 
         Schema::table('guardian_student', function (Blueprint $table) {
             if (Schema::hasColumn('guardian_student', 'guardian_id')) {
+                // Drop the composite unique index before the column so this works
+                // on every driver (SQLite cannot drop a column still used by an index).
+                $table->dropUnique('guardian_student_guardian_id_student_id_unique');
                 $table->dropConstrainedForeignId('guardian_id');
             }
 
             if (! Schema::hasColumn('guardian_student', 'user_id')) {
                 $table->foreignId('user_id')->after('id')->constrained();
+                $table->unique(['user_id', 'student_id']);
             }
         });
 
@@ -59,11 +63,13 @@ return new class extends Migration
 
         Schema::table('guardian_student', function (Blueprint $table) {
             if (Schema::hasColumn('guardian_student', 'user_id')) {
+                $table->dropUnique('guardian_student_user_id_student_id_unique');
                 $table->dropConstrainedForeignId('user_id');
             }
 
             if (! Schema::hasColumn('guardian_student', 'guardian_id')) {
                 $table->foreignId('guardian_id')->constrained();
+                $table->unique(['guardian_id', 'student_id']);
             }
         });
 
