@@ -10,6 +10,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::view('admin/dashboard', 'admin.dashboard')->name('admin.dashboard');
+    Route::view('admin/trips', 'admin.trips')->name('admin.trips');
 });
 
 require __DIR__.'/settings.php';
