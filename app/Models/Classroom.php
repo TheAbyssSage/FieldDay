@@ -15,7 +15,7 @@ class Classroom extends Model
 
     public function teacher(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function students(): HasMany

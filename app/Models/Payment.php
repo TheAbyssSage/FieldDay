@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Payment extends Model
 {
-
     protected $fillable = [
         'user_id',
         'student_id',
@@ -27,7 +26,7 @@ class Payment extends Model
 
     public function guardian(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function student(): BelongsTo
