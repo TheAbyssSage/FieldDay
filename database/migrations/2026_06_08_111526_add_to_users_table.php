@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('first_name')->nullable()->after('id');
             $table->string('last_name')->nullable()->after('first_name');
             $table->string('phone_number')->nullable()->after('email');
-            $table->string('role_id')->nullable()->after('phone_number');
-            $table->timestamp('deleted_at');
+            $table->foreignId('role_id')->nullable()->after('phone_number');
+            $table->softDeletes()->nullable();
         });
     }
 
