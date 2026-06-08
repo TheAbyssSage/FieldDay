@@ -11,13 +11,8 @@ class Role extends Model
         'name',
     ];
 
-    public function teachers(): HasMany
+    public function users(): HasMany
     {
-        return $this->hasMany(Teacher::class);
-    }
-
-    public function guardians(): HasMany
-    {
-        return $this->hasMany(Guardian::class);
+        return $this->hasMany(User::class);
     }
 }

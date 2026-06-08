@@ -9,7 +9,7 @@ class Payment extends Model
 {
 
     protected $fillable = [
-        'guardian_id',
+        'user_id',
         'student_id',
         'field_trip_id',
         'amount',
@@ -25,9 +25,9 @@ class Payment extends Model
         ];
     }
 
-    public function guardian(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Guardian::class);
+        return $this->belongsTo(User::class);
     }
 
     public function student(): BelongsTo
