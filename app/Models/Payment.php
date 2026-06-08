@@ -24,9 +24,9 @@ class Payment extends Model
         ];
     }
 
-    public function guardian(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function student(): BelongsTo
