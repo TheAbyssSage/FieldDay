@@ -15,9 +15,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
@@ -107,23 +104,12 @@ class User extends Authenticatable implements PasskeyUser
     /**
      * Get the user's initials
      */
-    public function role(): BelongsTo
+    public function initials(): string
     {
-        return $this->belongsTo(Role::class);
-    }
-
-    public function classrooms(): HasMany
-    {
-        return $this->hasMany(Classroom::class);
-    }
-
-    public function students(): BelongsToMany
-    {
-        return $this->belongsToMany(Student::class, 'guardian_student');
-    }
-
-    public function payments(): HasMany
-    {
-        return $this->hasMany(Payment::class);
+        return Str::of($this->name)
+            ->explode(' ')
+            ->take(2)
+            ->map(fn ($word) => Str::substr($word, 0, 1))
+            ->implode('');
     }
 }
