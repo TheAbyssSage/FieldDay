@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Classroom;
-use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,7 +16,9 @@ class ClassroomSeeder extends Seeder
      */
     public function run(): void
     {
-        $teachers = Teacher::all();
+        $teachers = User::whereHas('role', function ($query) {
+            $query->where('name', 'teacher');
+        })->get();
 
         foreach ($teachers as $i => $teacher) {
             // intdiv($i, 5) — integer division, no decimals
@@ -27,11 +29,10 @@ class ClassroomSeeder extends Seeder
             // 65 is the ASCII code for 'A', 66 = 'B', 67 = 'C', etc.
             $section = chr(65 + ($i % 5));
 
-            Classroom::create([
-                // Produces names like: Grade-1A, ..., Grade-1E -> Grade-2A, ..., Grade-2E, etc.
-                'name' => "Grade-{$grade}{$section}",
-                'teacher_id' => $teacher->id,
-            ]);
+            Classroom::firstOrCreate(
+                ['name' => "Grade-{$grade}{$section}"],
+                ['user_id' => $teacher->id]
+            );
         }
     }
 }
