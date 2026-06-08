@@ -3,10 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Role;
-use App\Models\User;
+use App\Models\Teacher;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class TeacherSeeder extends Seeder
 {
@@ -17,23 +16,17 @@ class TeacherSeeder extends Seeder
      */
     public function run(): void
     {
-        $role = Role::where('name', 'teacher')->firstOrFail();
+        $role = Role::where('name', 'teacher')->first();
 
-        // A known login for development and demos.
-        User::firstOrCreate(
-            ['email' => 'teacher@fieldday.test'],
-            [
-                'first_name' => 'Demo',
-                'last_name' => 'Teacher',
+        for ($i = 0; $i < 10; $i++) {
+            Teacher::create([
+                'first_name' => fake()->firstName(),
+                'last_name' => fake()->lastName(),
+                'email' => fake()->unique()->safeEmail(),
                 'phone_number' => fake()->phoneNumber(),
-                'email_verified_at' => now(),
-                'password' => Hash::make('password'),
+                'password' => bcrypt('password'),
                 'role_id' => $role->id,
-            ],
-        );
-
-        User::factory()
-            ->count(9)
-            ->create(['role_id' => $role->id]);
+            ]);
+        }
     }
 }

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Classroom;
-use App\Models\User;
+use App\Models\Teacher;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,7 +16,7 @@ class ClassroomSeeder extends Seeder
      */
     public function run(): void
     {
-        $teachers = User::whereHas('role', fn ($query) => $query->where('name', 'teacher'))->get();
+        $teachers = Teacher::all();
 
         foreach ($teachers as $i => $teacher) {
             // intdiv($i, 5) — integer division, no decimals
@@ -30,7 +30,7 @@ class ClassroomSeeder extends Seeder
             Classroom::create([
                 // Produces names like: Grade-1A, ..., Grade-1E -> Grade-2A, ..., Grade-2E, etc.
                 'name' => "Grade-{$grade}{$section}",
-                'user_id' => $teacher->id,
+                'teacher_id' => $teacher->id,
             ]);
         }
     }
