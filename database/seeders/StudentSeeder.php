@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Classroom;
-use App\Models\Guardian;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -18,7 +18,7 @@ class StudentSeeder extends Seeder
     public function run(): void
     {
         $classrooms = Classroom::all();
-        $guardians = Guardian::all();
+        $guardians = User::whereHas('role', fn ($query) => $query->where('name', 'guardian'))->get();
 
         foreach ($classrooms as $classroom) {
             for ($i = 0; $i < fake()->numberBetween(5, 40); $i++) {

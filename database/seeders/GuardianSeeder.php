@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Guardian;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class GuardianSeeder extends Seeder
 {
@@ -17,17 +17,23 @@ class GuardianSeeder extends Seeder
      */
     public function run(): void
     {
-        $role = Role::where('name', 'guardian')->first();
+        $role = Role::where('name', 'guardian')->firstOrFail();
 
-        for ($i = 0; $i < 50; $i++) {
-            Guardian::create([
-                'first_name' => fake()->firstName(),
-                'last_name' => fake()->lastName(),
-                'email' => fake()->unique()->safeEmail(),
+        // A known login for development and demos.
+        User::firstOrCreate(
+            ['email' => 'guardian@fieldday.test'],
+            [
+                'first_name' => 'Demo',
+                'last_name' => 'Guardian',
                 'phone_number' => fake()->phoneNumber(),
-                'password' => bcrypt('password'),
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
                 'role_id' => $role->id,
-            ]);
-        }
+            ],
+        );
+
+        User::factory()
+            ->count(49)
+            ->create(['role_id' => $role->id]);
     }
 }

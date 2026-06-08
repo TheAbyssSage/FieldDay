@@ -8,7 +8,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
-class TeacherSeeder extends Seeder
+class AdminSeeder extends Seeder
 {
     use WithoutModelEvents;
 
@@ -17,23 +17,18 @@ class TeacherSeeder extends Seeder
      */
     public function run(): void
     {
-        $role = Role::where('name', 'teacher')->firstOrFail();
+        $role = Role::where('name', 'admin')->firstOrFail();
 
-        // A known login for development and demos.
         User::firstOrCreate(
-            ['email' => 'teacher@fieldday.test'],
+            ['email' => 'admin@fieldday.test'],
             [
                 'first_name' => 'Demo',
-                'last_name' => 'Teacher',
+                'last_name' => 'Admin',
                 'phone_number' => fake()->phoneNumber(),
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
                 'role_id' => $role->id,
             ],
         );
-
-        User::factory()
-            ->count(9)
-            ->create(['role_id' => $role->id]);
     }
 }

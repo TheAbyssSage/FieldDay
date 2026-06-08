@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\FieldTrip;
-use App\Models\Guardian;
 use App\Models\Payment;
 use App\Models\Student;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -27,7 +26,7 @@ class PaymentSeeder extends Seeder
                     $status = fake()->randomElement(['pending', 'paid', 'refunded']);
 
                     Payment::create([
-                        'guardian_id' => $guardian->id,
+                        'user_id' => $guardian->id,
                         'student_id' => $student->id,
                         'field_trip_id' => $fieldTrip->id,
                         'amount' => $fieldTrip->cost,
