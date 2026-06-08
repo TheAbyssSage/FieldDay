@@ -20,6 +20,16 @@ return new class extends Migration
                 $table->foreignId('user_id')->after('name')->constrained();
             }
         });
+
+        Schema::table('guardian_student', function (Blueprint $table) {
+            if (Schema::hasColumn('guardian_student', 'guardian_id')) {
+                $table->dropConstrainedForeignId('guardian_id');
+            }
+
+            if (! Schema::hasColumn('guardian_student', 'user_id')) {
+                $table->foreignId('user_id')->after('id')->constrained();
+            }
+        });
     }
 
     /**
@@ -34,6 +44,16 @@ return new class extends Migration
 
             if (! Schema::hasColumn('classrooms', 'teacher_id')) {
                 $table->foreignId('teacher_id')->constrained();
+            }
+        });
+
+        Schema::table('guardian_student', function (Blueprint $table) {
+            if (Schema::hasColumn('guardian_student', 'user_id')) {
+                $table->dropConstrainedForeignId('user_id');
+            }
+
+            if (! Schema::hasColumn('guardian_student', 'guardian_id')) {
+                $table->foreignId('guardian_id')->constrained();
             }
         });
     }
