@@ -23,7 +23,7 @@ class Student extends Model
 
     public function guardians(): BelongsToMany
     {
-        return $this->belongsToMany(Guardian::class, 'guardian_student');
+        return $this->belongsToMany(User::class, 'guardian_student');
     }
 
     public function payments(): HasMany

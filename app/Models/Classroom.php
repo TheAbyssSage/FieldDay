@@ -10,12 +10,12 @@ class Classroom extends Model
 {
     protected $fillable = [
         'name',
-        'teacher_id',
+        'user_id',
     ];
 
     public function teacher(): BelongsTo
     {
-        return $this->belongsTo(Teacher::class);
+        return $this->belongsTo(User::class);
     }
 
     public function students(): HasMany
