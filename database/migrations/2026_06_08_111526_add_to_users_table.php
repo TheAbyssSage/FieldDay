@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropColumns('users', function (Blueprint $table) {
-            Schema::dropColumn('name');
-        });
-
-
         Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('name');
             $table->string('first_name')->nullable()->after('id');
             $table->string('last_name')->nullable()->after('first_name');
             $table->string('phone_number')->nullable()->after('email');
