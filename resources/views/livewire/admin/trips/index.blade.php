@@ -13,6 +13,7 @@
                     <th class="px-4 py-3">Begin date</th>
                     <th class="px-4 py-3">Cost</th>
                     <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3">Actions</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
@@ -24,10 +25,13 @@
                         <td class="px-4 py-3">{{ $trip->begin_date?->format('d M Y') }}</td>
                         <td class="px-4 py-3">€{{ number_format($trip->cost, 2) }}</td>
                         <td class="px-4 py-3">{{ ucfirst($trip->status) }}</td>
+                        <td class="px-4 py-3">
+                        <flux:button size="sm" :href="route('admin.trips.edit', $trip)" wire:navigate>Edit</flux:button>
+                      </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="px-4 py-6 text-center text-neutral-500">No trips found.</td>
+                        <td colspan="7" class="px-4 py-6 text-center text-neutral-500">No trips found.</td>
                     </tr>
                 @endforelse
             </tbody>
