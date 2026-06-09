@@ -1,6 +1,8 @@
 <div class="p-4">
-    <flux:heading size="xl" class="mb-4">Field trips</flux:heading>
-
+    <div class="mb-4 flex items-center justify-between">
+        <flux:heading size="xl">Field trips</flux:heading>
+        <flux:button :href="route('admin.trips.create')" variant="primary" wire:navigate>New trip</flux:button>
+    </div>
     <div class="overflow-x-auto rounded-xl border border-neutral-200 dark:border-neutral-700">
         <table class="w-full text-left text-sm">
             <thead class="border-b border-neutral-200 text-neutral-500 dark:border-neutral-700">

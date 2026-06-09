@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class FieldTrip extends Model
 {
+    public const STATUSES = ['open', 'completed', 'cancelled'];
     protected $fillable = [
         'title',
         'description',
