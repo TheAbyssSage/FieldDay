@@ -19,6 +19,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
         return view('admin.trips.edit', ['trip' => $trip]);
     })->name('admin.trips.edit');
 });
+// de require dir settings.php zorgt ervoor dat we de routes in routes/settings.php ook laden, deze routes zijn voor het beheren van de instellingen van de applicatie, en zijn ook beschermd door de auth, verified, en role:admin middlewares.
 require __DIR__.'/settings.php';
 
 // the route /admin/dashboard is now guarded by three middlewares — logged in (auth), verified email (verified), and role:admin. Anyone who isn't an admin gets a 403.

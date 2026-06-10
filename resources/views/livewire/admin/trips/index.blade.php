@@ -26,8 +26,11 @@
                         <td class="px-4 py-3">€{{ number_format($trip->cost, 2) }}</td>
                         <td class="px-4 py-3">{{ ucfirst($trip->status) }}</td>
                         <td class="px-4 py-3">
-                        <flux:button size="sm" :href="route('admin.trips.edit', $trip)" wire:navigate>Edit</flux:button>
-                      </td>
+                            <div class="flex gap-2">
+                                <flux:button size="sm" :href="route('admin.trips.edit', $trip)" wire:navigate>Edit</flux:button>
+                                <flux:button size="sm" variant="danger" wire:click="delete({{ $trip->id }})" wire:confirm="Are you sure you want to delete this trip?">Delete</flux:button>
+                            </div>
+                        </td>
                     </tr>
                 @empty
                     <tr>
