@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Payment extends Model
 {
+    // constanten gebruiken om de waarde te definiëren van de status van een betaling
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_PAID = 'paid';
+    public const STATUS_REFUNDED = 'refunded';
+
     protected $fillable = [
         'user_id',
         'student_id',

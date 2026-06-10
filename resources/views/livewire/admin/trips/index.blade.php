@@ -28,6 +28,7 @@
                         <td class="px-4 py-3">
                             <div class="flex gap-2">
                                 <flux:button size="sm" :href="route('admin.trips.edit', $trip)" wire:navigate>Edit</flux:button>
+                                <flux:button size="sm" variant="subtle" wire:click="refund({{ $trip->id }})" wire:confirm="Refund all paid payments and cancel this trip?" :disabled="$trip->paid_payments_count === 0">Refund</flux:button>
                                 <flux:button size="sm" variant="danger" wire:click="delete({{ $trip->id }})" wire:confirm="Are you sure you want to delete this trip?">Delete</flux:button>
                             </div>
                         </td>

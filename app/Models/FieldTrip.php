@@ -11,6 +11,8 @@ class FieldTrip extends Model
 {
     // softdelete gebruiken om de trips te kunnen verwijderen zonder ze echt uit de DB te verwijderen, we kunnen ze later nog herstellen als dat nodig is.
     use SoftDeletes;
+    // STATUS_CANCELLED constant toevoegen aan de lijst van mogelijke statussen voor een trip, zodat we ook trips kunnen markeren als geannuleerd, en deze kunnen filteren of tonen in de UI.
+    public const STATUS_CANCELLED = 'cancelled';
     public const STATUSES = ['open', 'completed', 'cancelled'];
     protected $fillable = [
         'title',
