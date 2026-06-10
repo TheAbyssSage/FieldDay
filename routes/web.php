@@ -6,7 +6,13 @@ Route::view('/', 'welcome')->name('home');
 // protecting the dashboard route with auth and verified middleware, only authenticated and verified users can access it.
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', function () {
+        if (auth()->user()->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return view('dashboard');
+    })->name('dashboard');
 });
 // de route /admin/trips/create is nu ook beschermd door de auth, verified, en role:admin middlewares, alleen admins kunnen deze route bereiken en een nieuwe trip aanmaken.
 // admin routes — protected by auth, verified, and role:admin middleware
