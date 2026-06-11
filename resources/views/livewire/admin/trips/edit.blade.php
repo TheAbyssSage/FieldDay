@@ -20,8 +20,8 @@
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-            <flux:input type="datetime-local" wire:model="departure_time" label="Departure time" />
-            <flux:input type="datetime-local" wire:model="return_time" label="Return time" />
+            <flux:input type="time" wire:model="departure_time" label="Departure time" />
+            <flux:input type="time" wire:model="return_time" label="Return time" />
         </div>
 
         <div class="grid grid-cols-2 gap-4">

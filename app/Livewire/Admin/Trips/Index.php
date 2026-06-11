@@ -12,11 +12,18 @@ use Livewire\Component;
 class Index extends Component
 {
     // de delete functie die wordt aangeroepen wanneer de gebruiker op de delete knop klikt, het verwijdert de trip uit de database, en toont een succesbericht
-        public function delete(FieldTrip $trip): void
+    public function delete(FieldTrip $trip): void
     {
-        // in plaats van de trip echt te verwijderen, gebruiken we soft deletes, zodat we de trip later nog kunnen herstellen als dat nodig is.
+        // met de if functie controleren we of er nog betalingen zijn die betaald zijn voor deze trip, als dat het geval is, tonen we een foutbericht en verwijderen we de trip niet, omdat we eerst de betalingen moeten terugbetalen voordat we de trip kunnen verwijderen.
+        if ($trip->payments()->where('status', Payment::STATUS_PAID)->exists()) {
+            // flux gebruiken om een toast bericht te tonen dat de trip niet kan worden verwijderd omdat er nog betalingen zijn die betaald zijn, we gebruiken variant danger voor een rode kleur, en we geven de tekst van het bericht mee.
+            Flux::toast(variant: 'danger', text: 'Refund the paid payments before deleting this trip.');
+        
+            return;
+        }
+        // als er geen betalingen zijn die betaald zijn, kunnen we de trip veilig verwijderen, we roepen de delete functie aan op het trip model, en we tonen een succesbericht dat de trip is verwijderd.
         $trip->delete();
-        // flux gebruiken om een toast bericht te tonen dat de trip succesvol is verwijderd, we gebruiken variant success voor een groene kleur, en we geven de tekst van het bericht mee.
+
         Flux::toast(variant: 'success', text: 'Trip deleted.');
     }
     // de refund functie die wordt aangeroepen wanneer de gebruiker op de refund knop klikt, het markeert alle betalingen van de trip als refunded, en markeert de trip als geannuleerd, en toont een succesbericht

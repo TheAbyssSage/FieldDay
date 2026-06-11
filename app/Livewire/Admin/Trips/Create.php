@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Livewire\Admin\Trips;
-
+// carbon is een library voor het werken met datums en tijden in PHP
+use Carbon\Carbon;
 use App\Models\Classroom;
 use App\Models\FieldTrip;
 use Livewire\Component;
@@ -30,8 +31,8 @@ class Create extends Component
             'classroom_id' => ['required', 'exists:classrooms,id'],
             'begin_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after_or_equal:begin_date'],
-            'departure_time' => ['required', 'date'],
-            'return_time' => ['required', 'date', 'after:departure_time'],
+            'departure_time' => ['required', 'date_format:H:i'],
+            'return_time' => ['required', 'date_format:H:i'],
             'cost' => ['required', 'numeric', 'min:0'],
             'payment_deadline' => ['required', 'date', 'before_or_equal:begin_date'],
         ];
@@ -39,7 +40,21 @@ class Create extends Component
     // deze public function save() wordt aangeroepen wanneer de gebruiker het formulier indient, het valideert de input, maakt een nieuwe trip aan in de database, toont een succesbericht, en redirect de gebruiker terug naar de lijst van trips
     public function save(): void
     {
+        // we valideren de input met de regels die we hebben gedifinieerd in de rules() functie.
         $validated = $this->validate();
+        // Carbon gebruiken om de begin en eind datums en tijden samen te voegen tot datetime objecten.
+        $departure = Carbon::parse("{$this->begin_date} {$this->departure_time}");
+        // we controleren of de return tijd na de departure tijd is, zo niet, tonen we een foutmelding en stoppen we het opslaan van de trip.
+        $return = Carbon::parse("{$this->end_date} {$this->return_time}");
+        
+        if ($return->lessThanOrEqualTo($departure)) {
+            $this->addError('return_time', 'The return must be after the departure.');
+
+            return;
+        }
+        // we voegen de departure en return datetimes toe aan de validated data, zodat we ze kunnen opslaan in de database.
+        $validated['departure_time'] = $departure;
+        $validated['return_time'] = $return;
 
         FieldTrip::create($validated);
 
