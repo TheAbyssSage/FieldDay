@@ -1,5 +1,8 @@
 <div class="p-4">
-    <flux:heading size="xl" class="mb-4">Users</flux:heading>
+    <div class="mb-4 flex items-center justify-between">
+        <flux:heading size="xl">Users</flux:heading>
+        <flux:button :href="route('admin.users.create')" variant="primary" wire:navigate>New user</flux:button>
+    </div>
 
     <div class="overflow-x-auto rounded-xl border border-neutral-200 dark:border-neutral-700">
         <table class="w-full text-left text-sm">
