@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+Route::view('admin/users', 'admin.users')->name('admin.users');
 Route::view('/', 'welcome')->name('home');
 // protecting the dashboard route with auth and verified middleware, only authenticated and verified users can access it.
 
