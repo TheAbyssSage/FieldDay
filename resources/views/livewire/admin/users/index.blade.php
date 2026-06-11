@@ -11,6 +11,7 @@
                     <th class="px-4 py-3">Name</th>
                     <th class="px-4 py-3">Email</th>
                     <th class="px-4 py-3">Role</th>
+                    <th class="px-4 py-3">Actions</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
@@ -19,10 +20,13 @@
                         <td class="px-4 py-3 font-medium">{{ $user->name }}</td>
                         <td class="px-4 py-3">{{ $user->email }}</td>
                         <td class="px-4 py-3">{{ ucfirst($user->role?->name ?? '—') }}</td>
+                        <td class="px-4 py-3">
+                            <flux:button size="sm" variant="danger" wire:click="delete({{ $user->id }})" wire:confirm="Are you sure you want to delete this user?" :disabled="$user->is(auth()->user())">Delete</flux:button>
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3" class="px-4 py-6 text-center text-neutral-500">No users found.</td>
+                        <td colspan="4" class="px-4 py-6 text-center text-neutral-500">No users found.</td>
                     </tr>
                 @endforelse
             </tbody>
