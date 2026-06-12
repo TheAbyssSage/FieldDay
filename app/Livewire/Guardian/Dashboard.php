@@ -100,6 +100,18 @@ class Dashboard extends Component
             return;
         }
 
+        // Prevent re-paying an already paid or refunded payment
+        $existing = Payment::where('user_id', Auth::id())
+            ->where('student_id', $student->id)
+            ->where('field_trip_id', $trip->id)
+            ->first();
+
+        if ($existing && in_array($existing->status, [Payment::STATUS_PAID, Payment::STATUS_REFUNDED], true)) {
+            Flux::toast(variant: 'error', text: 'This payment has already been processed.');
+
+            return;
+        }
+
         // Find existing payment or create a new one with pending status
         $payment = Payment::firstOrCreate(
             [

@@ -70,7 +70,7 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     {{-- Action column: depends on trip status and payment status --}}
-                                    @if ($trip->status === 'open' && (! $payment || $payment->status !== 'paid'))
+                                    @if ($trip->status === 'open' && (! $payment || $payment->status === 'pending'))
                                         <flux:button
                                             size="sm"
                                             variant="primary"
