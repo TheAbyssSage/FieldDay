@@ -19,8 +19,8 @@ class Create extends Component
     public string $end_date = '';
     public string $departure_time = '';
     public string $return_time = '';
-    public string $cost = '';
-    public string $payment_deadline = '';
+    public ?string $cost = null;
+    public ?string $payment_deadline = null;
 
     protected function rules(): array
     {
@@ -34,8 +34,8 @@ class Create extends Component
             'end_date' => ['required', 'date', 'after_or_equal:begin_date'],
             'departure_time' => ['required', 'date'],
             'return_time' => ['required', 'date', 'after:departure_time'],
-            'cost' => ['required', 'numeric', 'min:0'],
-            'payment_deadline' => ['required', 'date', 'before_or_equal:begin_date'],
+            'cost' => ['nullable', 'numeric', 'min:0'],
+            'payment_deadline' => ['nullable', 'date', 'before_or_equal:begin_date'],
         ];
     }
 
