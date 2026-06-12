@@ -31,7 +31,7 @@ class Create extends Component
             'end_date' => ['required', 'date', 'after_or_equal:begin_date'],
             'departure_time' => ['required', 'date'],
             'return_time' => ['required', 'date', 'after:departure_time'],
-            'cost' => ['required', 'numeric', 'min:0', 'max:999999.99'],
+            'cost' => ['required', 'numeric', 'min:0'],
             'payment_deadline' => ['required', 'date', 'before_or_equal:begin_date'],
         ];
     }
