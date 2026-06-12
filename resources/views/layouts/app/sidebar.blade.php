@@ -16,6 +16,10 @@
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
 
+                    <flux:sidebar.item icon="map" :href="route('teacher.trips.index')" :current="request()->routeIs('teacher.trips.*')" wire:navigate>
+                        {{ __('My Trips') }}
+                    </flux:sidebar.item>
+
                     <flux:sidebar.item icon="map" :href="route('new-trip.index')" :current="request()->routeIs('new-trip.*')" wire:navigate>
                         {{ __('New Trip') }}
                     </flux:sidebar.item>

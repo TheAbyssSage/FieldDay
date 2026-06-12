@@ -16,6 +16,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::view('new-trip', 'new-trip')->name('new-trip.index');
 
+    Route::view('teacher/trips', 'teacher.trips.index')->name('teacher.trips.index');
+
+    Route::get('teacher/trips/{trip}/edit', function (\App\Models\FieldTrip $trip) {
+        return view('teacher.trips.edit', ['trip' => $trip]);
+    })->name('teacher.trips.edit');
+
     Route::view('teacher/permission-forms', 'teacher.permission-forms.index')->name('teacher.permission-forms.index');
     Route::view('teacher/permission-forms/create', 'teacher.permission-forms.create')->name('teacher.permission-forms.create');
 

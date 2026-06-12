@@ -22,7 +22,11 @@
                 <tbody class="divide-y divide-zinc-200 dark:divide-zinc-700">
                     @foreach ($trips as $trip)
                         <tr>
-                            <td class="px-4 py-3">{{ $trip->title }}</td>
+                            <td class="px-4 py-3 font-medium">
+                                <a href="{{ route('teacher.trips.edit', $trip) }}" class="underline hover:text-zinc-500" wire:navigate>
+                                    {{ $trip->title }}
+                                </a>
+                            </td>
                             <td class="px-4 py-3">{{ $trip->location }}</td>
                             <td class="px-4 py-3">{{ $trip->classroom->name }}</td>
                             <td class="px-4 py-3">{{ $trip->begin_date->format('M j, Y') }}</td>
