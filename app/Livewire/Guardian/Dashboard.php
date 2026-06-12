@@ -29,51 +29,50 @@ class Dashboard extends Component
         // Collect unique classroom IDs from these students
         $classroomIds = $students->pluck('classroom_id')->unique()->filter();
 
-        // Fetch ALL trips (unpaginated) for counting and payment lookup
+        // Fetch ALL trips for these classrooms (unpaginated) — used for counting and payment lookup
         $allTrips = FieldTrip::whereIn('classroom_id', $classroomIds)
             ->with('classroom')
             ->latest()
             ->get();
 
-        // Fetch paginated trips for the table display (10 per page)
+        // Paginated slice for the table display (10 per page)
         $trips = FieldTrip::whereIn('classroom_id', $classroomIds)
             ->with('classroom')
             ->latest()
             ->paginate(10);
 
-        // Existing payments by this guardian across ALL trips, keyed by "student_id-trip_id"
+        // All trip IDs for payment lookup
+        $allTripIds = $allTrips->pluck('id');
+
+        // Existing payments by this guardian, keyed by "student_id-trip_id" for O(1) lookup in the view
         $payments = Payment::where('user_id', $user->id)
-            ->whereIn('field_trip_id', $allTrips->pluck('id'))
+            ->whereIn('field_trip_id', $allTripIds)
             ->get()
-            ->keyBy(function ($payment) {
-                return $payment->student_id.'-'.$payment->field_trip_id;
-            });
+            ->keyBy(fn ($p) => $p->student_id.'-'.$p->field_trip_id);
 
-        // Count pending/paid across ALL student×trip combos, not just the current page
-        $pendingCount = 0;
-        $paidCount = 0;
-
+        // Count total student×trip combinations across ALL trips
+        $studentsByClassroom = $students->groupBy('classroom_id');
+        $totalCombos = 0;
         foreach ($allTrips as $trip) {
-            foreach ($students->where('classroom_id', $trip->classroom_id) as $student) {
-                $payment = $payments->get($student->id.'-'.$trip->id);
-
-                if ($payment && $payment->status === Payment::STATUS_PAID) {
-                    $paidCount++;
-                } elseif ($payment && $payment->status === Payment::STATUS_PENDING) {
-                    $pendingCount++;
-                } else {
-                    // No payment record yet — counts as pending (needs action)
-                    $pendingCount++;
-                }
-            }
+            $totalCombos += ($studentsByClassroom->get($trip->classroom_id)?->count() ?? 0);
         }
 
+        // Count paid payments with a single DB query
+        $paidCount = Payment::where('user_id', $user->id)
+            ->whereIn('field_trip_id', $allTripIds)
+            ->where('status', Payment::STATUS_PAID)
+            ->count();
+
+        // Everything not paid is pending (including combos with no payment record yet)
+        $pendingCount = $totalCombos - $paidCount;
+
         return view('livewire.guardian.dashboard', [
-            'students' => $students,
-            'trips' => $trips,
-            'payments' => $payments,
-            'pendingCount' => $pendingCount,
-            'paidCount' => $paidCount,
+            'students'          => $students,
+            'studentsByClassroom' => $studentsByClassroom,
+            'trips'             => $trips,
+            'payments'          => $payments,
+            'pendingCount'      => $pendingCount,
+            'paidCount'         => $paidCount,
         ]);
     }
 
@@ -84,6 +83,16 @@ class Dashboard extends Component
      */
     public function pay(FieldTrip $trip, Student $student): void
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Verify this student belongs to the authenticated guardian
+        if (! $user->students()->where('student_id', $student->id)->exists()) {
+            Flux::toast(variant: 'error', text: 'This student is not linked to your account.');
+
+            return;
+        }
+
         // Only allow payment for trips that are still open
         if ($trip->status !== 'open') {
             Flux::toast(variant: 'error', text: 'This trip is no longer open for payments.');
@@ -94,8 +103,8 @@ class Dashboard extends Component
         // Find existing payment or create a new one with pending status
         $payment = Payment::firstOrCreate(
             [
-                'user_id' => Auth::id(),
-                'student_id' => $student->id,
+                'user_id'       => Auth::id(),
+                'student_id'    => $student->id,
                 'field_trip_id' => $trip->id,
             ],
             [
@@ -106,7 +115,7 @@ class Dashboard extends Component
 
         // Mark as paid with current timestamp
         $payment->update([
-            'status' => Payment::STATUS_PAID,
+            'status'  => Payment::STATUS_PAID,
             'paid_at' => now(),
         ]);
 

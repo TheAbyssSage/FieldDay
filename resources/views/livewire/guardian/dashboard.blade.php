@@ -38,10 +38,9 @@
                 <tbody class="divide-y divide-zinc-200 dark:divide-zinc-700">
                     {{-- One row per student per trip: loop trips, then students in that trip's classroom --}}
                     @foreach ($trips as $trip)
-                        @foreach ($students->where('classroom_id', $trip->classroom_id) as $student)
+                        @foreach ($studentsByClassroom->get($trip->classroom_id, collect()) as $student)
                             @php
-                                $paymentKey = $student->id . '-' . $trip->id;
-                                $payment = $payments->get($paymentKey);
+                                $payment = $payments->get($student->id . '-' . $trip->id);
                             @endphp
                             <tr>
                                 <td class="px-4 py-3 font-medium">{{ $trip->title }}</td>
@@ -76,8 +75,10 @@
                                         >
                                             Mark as Paid
                                         </flux:button>
+                                    @elseif ($payment && $payment->status === 'paid')
+                                        <flux:text size="sm" class="text-green-600 dark:text-green-400">Paid ✓</flux:text>
                                     @else
-                                        <flux:text size="sm" class="text-zinc-500">—</flux:text>
+                                        <flux:text size="sm" class="text-zinc-500">Closed</flux:text>
                                     @endif
                                 </td>
                             </tr>
