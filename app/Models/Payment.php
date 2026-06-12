@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Payment extends Model
 {
+    use HasFactory;
     // constanten gebruiken om de waarde te definiëren van de status van een betaling
     public const STATUS_PENDING = 'pending';
     public const STATUS_PAID = 'paid';

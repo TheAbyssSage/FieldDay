@@ -4,21 +4,31 @@ namespace App\Livewire\Admin\Trips;
 
 use App\Models\Classroom;
 use App\Models\FieldTrip;
+use App\Models\PermissionForm;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 // deze component is verantwoordelijk voor het aanmaken van een nieuwe trip in de admin dashboard
 class Create extends Component
 {
+    public function mount(): void
+    {
+        if (! Auth::user()?->hasRole('admin')) {
+            abort(403);
+        }
+    }
+
     // deze public properties zijn de velden van het formulier, ze worden automatisch gevuld door Livewire wanneer de gebruiker input geeft
     public string $title = '';
     public string $description = '';
     public string $location = '';
     public ?int $classroom_id = null;
+    public ?int $permission_form_id = null;
     public string $begin_date = '';
     public string $end_date = '';
     public string $departure_time = '';
     public string $return_time = '';
-    public string $cost = '';
-    public string $payment_deadline = '';
+    public ?string $cost = null;
+    public ?string $payment_deadline = null;
     // deze protected function rules() definieert de validatieregels voor het formulier, Livewire gebruikt deze regels om de input te valideren voordat de trip wordt opgeslagen
     protected function rules(): array
     {
@@ -28,12 +38,13 @@ class Create extends Component
             'description' => ['required', 'string'],
             'location' => ['required', 'string', 'max:255'],
             'classroom_id' => ['required', 'exists:classrooms,id'],
+            'permission_form_id' => ['nullable', 'exists:permission_forms,id'],
             'begin_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after_or_equal:begin_date'],
             'departure_time' => ['required', 'date'],
             'return_time' => ['required', 'date', 'after:departure_time'],
-            'cost' => ['required', 'numeric', 'min:0'],
-            'payment_deadline' => ['required', 'date', 'before_or_equal:begin_date'],
+            'cost' => ['nullable', 'numeric', 'min:0'],
+            'payment_deadline' => ['nullable', 'date', 'before_or_equal:begin_date'],
         ];
     }
     // deze public function save() wordt aangeroepen wanneer de gebruiker het formulier indient, het valideert de input, maakt een nieuwe trip aan in de database, toont een succesbericht, en redirect de gebruiker terug naar de lijst van trips
@@ -52,6 +63,7 @@ class Create extends Component
     {
         return view('livewire.admin.trips.create', [
             'classrooms' => Classroom::orderBy('name')->get(),
+            'permissionForms' => PermissionForm::orderBy('title')->get(),
         ]);
     }
 }

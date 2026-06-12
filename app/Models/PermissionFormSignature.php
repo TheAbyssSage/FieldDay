@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PermissionFormSignature extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'permission_form_id',
         'user_id',
