@@ -19,6 +19,10 @@
                     <flux:sidebar.item icon="map" :href="route('new-trip.index')" :current="request()->routeIs('new-trip.*')" wire:navigate>
                         {{ __('New Trip') }}
                     </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="clipboard-document-list" :href="route('teacher.permission-forms.index')" :current="request()->routeIs('teacher.permission-forms.*')" wire:navigate>
+                        {{ __('Permission Forms') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
