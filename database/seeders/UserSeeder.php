@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
         $adminRole = Role::where('name', 'admin')->first();
 
         // Create admin user
-        User::firstOrCreate(
+        $adminUser = User::withTrashed()->updateOrCreate(
             ['email' => 'admin@fieldday.test'],
             [
                 'first_name' => 'Admin',
@@ -31,10 +31,41 @@ class UserSeeder extends Seeder
                 'role_id' => $adminRole->id,
             ]
         );
+        if ($adminUser->trashed()) {
+            $adminUser->restore();
+        }
+
+        // Create Sage admin user
+        $sageAdmin = User::withTrashed()->updateOrCreate(
+            ['email' => 'sage.stockmans@pm.me'],
+            [
+                'first_name' => 'Sage',
+                'last_name' => '',
+                'password' => Hash::make('12345678'),
+                'role_id' => $adminRole->id,
+            ]
+        );
+        if ($sageAdmin->trashed()) {
+            $sageAdmin->restore();
+        }
+
+        // Create Sage teacher user
+        $sageTeacher = User::withTrashed()->updateOrCreate(
+            ['email' => 'teacher.sage@pm.me'],
+            [
+                'first_name' => 'Sage',
+                'last_name' => '',
+                'password' => Hash::make('12345678'),
+                'role_id' => $teacherRole->id,
+            ]
+        );
+        if ($sageTeacher->trashed()) {
+            $sageTeacher->restore();
+        }
 
         // Create 10 teachers
         for ($i = 1; $i <= 10; $i++) {
-            User::firstOrCreate(
+            $teacher = User::withTrashed()->updateOrCreate(
                 ['email' => "teacher{$i}@fieldday.test"],
                 [
                     'first_name' => fake()->firstName(),
@@ -44,11 +75,14 @@ class UserSeeder extends Seeder
                     'role_id' => $teacherRole->id,
                 ]
             );
+            if ($teacher->trashed()) {
+                $teacher->restore();
+            }
         }
 
         // Create 20 guardians
         for ($i = 1; $i <= 20; $i++) {
-            User::firstOrCreate(
+            $guardian = User::withTrashed()->updateOrCreate(
                 ['email' => "guardian{$i}@fieldday.test"],
                 [
                     'first_name' => fake()->firstName(),
@@ -58,6 +92,9 @@ class UserSeeder extends Seeder
                     'role_id' => $guardianRole->id,
                 ]
             );
+            if ($guardian->trashed()) {
+                $guardian->restore();
+            }
         }
     }
 }
