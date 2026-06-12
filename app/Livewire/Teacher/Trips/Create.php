@@ -4,6 +4,7 @@ namespace App\Livewire\Teacher\Trips;
 
 use App\Models\Classroom;
 use App\Models\FieldTrip;
+use App\Models\PermissionForm;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -13,6 +14,7 @@ class Create extends Component
     public string $description = '';
     public string $location = '';
     public ?int $classroom_id = null;
+    public ?int $permission_form_id = null;
     public string $begin_date = '';
     public string $end_date = '';
     public string $departure_time = '';
@@ -27,6 +29,7 @@ class Create extends Component
             'description' => ['required', 'string'],
             'location' => ['required', 'string', 'max:255'],
             'classroom_id' => ['required', 'exists:classrooms,id'],
+            'permission_form_id' => ['nullable', 'exists:permission_forms,id'],
             'begin_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after_or_equal:begin_date'],
             'departure_time' => ['required', 'date'],
@@ -51,6 +54,7 @@ class Create extends Component
     {
         return view('livewire.teacher.trips.create', [
             'classrooms' => Classroom::orderBy('name')->get(),
+            'permissionForms' => PermissionForm::where('user_id', Auth::id())->orderBy('title')->get(),
         ]);
     }
 }

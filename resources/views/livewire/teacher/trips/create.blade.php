@@ -12,6 +12,12 @@
             @endforeach
         </flux:select>
 
+        <flux:select wire:model="permission_form_id" label="Permission Form" placeholder="Choose a permission form... (optional)">
+            @foreach ($permissionForms as $form)
+                <flux:select.option :value="$form->id">{{ $form->title }}</flux:select.option>
+            @endforeach
+        </flux:select>
+
         <div class="grid grid-cols-2 gap-4">
             <flux:input type="date" wire:model="begin_date" label="Begin date" />
             <flux:input type="date" wire:model="end_date" label="End date" />

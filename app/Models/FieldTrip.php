@@ -26,11 +26,17 @@ class FieldTrip extends Model
         'payment_deadline',
         'classroom_id',
         'status',
+        'permission_form_id',
     ];
     // de relatie tussen een trip en een classroom, een trip hoort bij één classroom, en een classroom kan meerdere trips hebben
     public function classroom(): BelongsTo
     {
         return $this->belongsTo(Classroom::class);
+    }
+
+    public function permissionForm(): BelongsTo
+    {
+        return $this->belongsTo(PermissionForm::class);
     }
     // de relatie tussen een trip en payments, een trip kan meerdere payments hebben, en een payment hoort bij één trip
     public function payments(): HasMany
