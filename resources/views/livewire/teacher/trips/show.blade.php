@@ -37,23 +37,27 @@
                         <th class="px-4 py-3 font-medium">Guardian</th>
                         <th class="px-4 py-3 font-medium">Payment</th>
                         <th class="px-4 py-3 font-medium">Form Signed</th>
+                        <th class="px-4 py-3 font-medium">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-zinc-200 dark:divide-zinc-700">
                     @foreach ($students as $student)
+                        @php
+                            $payment = $payments->get($student->id);
+                            $guardian = $student->users->first();
+                        @endphp
                         <tr>
                             <td class="px-4 py-3 font-medium">{{ $student->first_name }} {{ $student->last_name }}</td>
                             <td class="px-4 py-3">
                                 @if ($student->users->isNotEmpty())
-                                    @foreach ($student->users as $guardian)
-                                        <div>{{ $guardian->name }}</div>
+                                    @foreach ($student->users as $g)
+                                        <div>{{ $g->name }}</div>
                                     @endforeach
                                 @else
                                     <span class="text-zinc-400">—</span>
                                 @endif
                             </td>
                             <td class="px-4 py-3">
-                                @php $payment = $payments->get($student->id); @endphp
                                 @if ($payment)
                                     <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium
                                         {{ $payment->status === 'paid' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : '' }}
@@ -80,6 +84,23 @@
                                 @else
                                     <span class="text-zinc-400">No form</span>
                                 @endif
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="flex gap-1">
+                                    @if ($payment && $payment->status === 'paid')
+                                        <flux:button size="xs" variant="subtle" wire:click="markUnpaid({{ $student->id }})" wire:confirm="Mark payment as pending for {{ $student->first_name }}?">Unpay</flux:button>
+                                    @else
+                                        <flux:button size="xs" wire:click="markPaid({{ $student->id }})" wire:confirm="Mark payment as paid for {{ $student->first_name }}?">Pay</flux:button>
+                                    @endif
+                                    @if ($trip->permission_form_id && $guardian)
+                                        @php $studentSignatures = $signatures->get($student->id); @endphp
+                                        @if ($studentSignatures && $studentSignatures->isNotEmpty())
+                                            <flux:button size="xs" variant="subtle" wire:click="markUnsigned({{ $student->id }})" wire:confirm="Remove signature for {{ $student->first_name }}?">Unsign</flux:button>
+                                        @else
+                                            <flux:button size="xs" variant="subtle" wire:click="markSigned({{ $student->id }}, {{ $guardian->id }})" wire:confirm="Mark form as signed for {{ $student->first_name }}?">Sign</flux:button>
+                                        @endif
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     @endforeach

@@ -43,6 +43,59 @@ class Show extends Component
         $this->redirectRoute('teacher.trips.index', navigate: true);
     }
 
+    public function markPaid(int $studentId): void
+    {
+        $payment = Payment::firstOrNew([
+            'field_trip_id' => $this->trip->id,
+            'student_id' => $studentId,
+        ]);
+
+        $payment->fill([
+            'user_id' => Auth::id(),
+            'amount' => $this->trip->cost ?? 0,
+            'status' => Payment::STATUS_PAID,
+            'paid_at' => now(),
+        ])->save();
+
+        Flux::toast(variant: 'success', text: 'Payment marked as paid.');
+    }
+
+    public function markUnpaid(int $studentId): void
+    {
+        Payment::where('field_trip_id', $this->trip->id)
+            ->where('student_id', $studentId)
+            ->update(['status' => Payment::STATUS_PENDING, 'paid_at' => null]);
+
+        Flux::toast(variant: 'success', text: 'Payment marked as pending.');
+    }
+
+    public function markSigned(int $studentId, int $guardianId): void
+    {
+        if (! $this->trip->permission_form_id) {
+            Flux::toast(variant: 'error', text: 'No permission form attached to this trip.');
+            return;
+        }
+
+        PermissionFormSignature::firstOrCreate([
+            'permission_form_id' => $this->trip->permission_form_id,
+            'student_id' => $studentId,
+            'user_id' => $guardianId,
+        ], [
+            'signed_at' => now(),
+        ]);
+
+        Flux::toast(variant: 'success', text: 'Form marked as signed.');
+    }
+
+    public function markUnsigned(int $studentId): void
+    {
+        PermissionFormSignature::where('permission_form_id', $this->trip->permission_form_id)
+            ->where('student_id', $studentId)
+            ->delete();
+
+        Flux::toast(variant: 'success', text: 'Form signature removed.');
+    }
+
     public function render()
     {
         $students = $this->trip->classroom->students;
