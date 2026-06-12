@@ -54,6 +54,10 @@
                                         <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
                                             Paid
                                         </span>
+                                    @elseif ($payment && $payment->status === 'refunded')
+                                        <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300">
+                                            Refunded
+                                        </span>
                                     @elseif ($payment && $payment->status === 'pending')
                                         <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300">
                                             Pending
@@ -65,7 +69,7 @@
                                     @endif
                                 </td>
                                 <td class="px-4 py-3">
-                                    {{-- Show "Mark as Paid" button only for open trips that aren't already paid --}}
+                                    {{-- Action column: depends on trip status and payment status --}}
                                     @if ($trip->status === 'open' && (! $payment || $payment->status !== 'paid'))
                                         <flux:button
                                             size="sm"
@@ -77,6 +81,8 @@
                                         </flux:button>
                                     @elseif ($payment && $payment->status === 'paid')
                                         <flux:text size="sm" class="text-green-600 dark:text-green-400">Paid ✓</flux:text>
+                                    @elseif ($payment && $payment->status === 'refunded')
+                                        <flux:text size="sm" class="text-red-600 dark:text-red-400">Refunded</flux:text>
                                     @else
                                         <flux:text size="sm" class="text-zinc-500">Closed</flux:text>
                                     @endif
