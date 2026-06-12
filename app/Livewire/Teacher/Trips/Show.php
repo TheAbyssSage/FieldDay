@@ -24,7 +24,7 @@ class Show extends Component
 
     public function complete(): void
     {
-        $this->trip->update(['status' => FieldTrip::STATUSES[1]]); // 'completed'
+        $this->trip->update(['status' => FieldTrip::STATUS_COMPLETED]);
         Flux::toast(variant: 'success', text: 'Trip marked as completed.');
         $this->trip->refresh();
     }

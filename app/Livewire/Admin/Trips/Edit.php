@@ -4,6 +4,8 @@ namespace App\Livewire\Admin\Trips;
 
 use App\Models\Classroom;
 use App\Models\FieldTrip;
+use App\Models\PermissionForm;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 // livewire gebruiken om een trip te bewerken in het admin panel
@@ -15,27 +17,33 @@ class Edit extends Component
     public string $description = '';
     public string $location = '';
     public ?int $classroom_id = null;
+    public ?int $permission_form_id = null;
     public string $begin_date = '';
     public string $end_date = '';
     public string $departure_time = '';
     public string $return_time = '';
-    public string $cost = '';
-    public string $payment_deadline = '';
+    public ?string $cost = null;
+    public ?string $payment_deadline = null;
     public string $status = '';
     // de trip die we willen bewerken in de mount functie zetten
     public function mount(FieldTrip $trip): void
     {
+        if (! Auth::user()?->hasRole('admin')) {
+            abort(403);
+        }
+
         $this->trip = $trip;
         $this->title = $trip->title;
         $this->description = $trip->description;
         $this->location = $trip->location;
         $this->classroom_id = $trip->classroom_id;
+        $this->permission_form_id = $trip->permission_form_id;
         $this->begin_date = $trip->begin_date->format('Y-m-d');
         $this->end_date = $trip->end_date->format('Y-m-d');
         $this->departure_time = $trip->departure_time->format('Y-m-d\TH:i');
         $this->return_time = $trip->return_time->format('Y-m-d\TH:i');
         $this->cost = $trip->cost;
-        $this->payment_deadline = $trip->payment_deadline->format('Y-m-d');
+        $this->payment_deadline = $trip->payment_deadline?->format('Y-m-d');
         $this->status = $trip->status;
     }
     // de regels voor het valideren van de input
@@ -46,12 +54,13 @@ class Edit extends Component
             'description' => ['required', 'string'],
             'location' => ['required', 'string', 'max:255'],
             'classroom_id' => ['required', 'exists:classrooms,id'],
+            'permission_form_id' => ['nullable', 'exists:permission_forms,id'],
             'begin_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after_or_equal:begin_date'],
             'departure_time' => ['required', 'date'],
             'return_time' => ['required', 'date', 'after:departure_time'],
-            'cost' => ['required', 'numeric', 'min:0'],
-            'payment_deadline' => ['required', 'date', 'before_or_equal:begin_date'],
+            'cost' => ['nullable', 'numeric', 'min:0'],
+            'payment_deadline' => ['nullable', 'date', 'before_or_equal:begin_date'],
             'status' => ['required', Rule::in(FieldTrip::STATUSES)],
         ];
     }
@@ -71,6 +80,7 @@ class Edit extends Component
     {   // de classrooms en statussen ophalen en doorgeven aan de view
         return view('livewire.admin.trips.edit', [
             'classrooms' => Classroom::orderBy('name')->get(),
+            'permissionForms' => PermissionForm::orderBy('title')->get(),
             'statuses' => FieldTrip::STATUSES,
         ]);
     }

@@ -7,10 +7,18 @@ use App\Models\Payment;
 // flux gebruiken om de trips op te halen en te tonen zonder de pagina te hoeven herladen, en we kunnen ook gemakkelijk functies toevoegen voor het verwijderen of bewerken van trips in de toekomst.
 use Flux\Flux;
 // we gebruiken Livewire om deze component te maken, zodat we de trips kunnen ophalen en tonen zonder de pagina te hoeven herladen, en we kunnen ook gemakkelijk functies toevoegen voor het verwijderen of bewerken van trips in de toekomst.
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 // deze component toont de lisjt van alle trips in de admin dashboard
 class Index extends Component
 {
+    public function mount(): void
+    {
+        if (! Auth::user()?->hasRole('admin')) {
+            abort(403);
+        }
+    }
+
     // de delete functie die wordt aangeroepen wanneer de gebruiker op de delete knop klikt, het verwijdert de trip uit de database, en toont een succesbericht
         public function delete(FieldTrip $trip): void
     {
@@ -37,7 +45,7 @@ class Index extends Component
             'trips' => FieldTrip::with('classroom')
                 ->withCount(['payments as paid_payments_count' => fn ($query) => $query->where('status', Payment::STATUS_PAID)])
                 ->orderByDesc('begin_date')
-                ->get(),
+                ->paginate(15),
         ]);
     }
 }
