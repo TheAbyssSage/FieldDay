@@ -14,9 +14,14 @@
                 <div class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
                     <div class="flex items-center justify-between">
                         <flux:heading size="lg">{{ $form->title }}</flux:heading>
-                        <flux:text size="sm" class="text-zinc-500">
-                            {{ $form->created_at->format('M j, Y') }}
-                        </flux:text>
+                        <div class="flex items-center gap-2">
+                            <flux:button size="sm" :href="route('teacher.permission-forms.edit', $form)" variant="ghost" wire:navigate>
+                                Edit
+                            </flux:button>
+                            <flux:text size="sm" class="text-zinc-500">
+                                {{ $form->created_at->format('M j, Y') }}
+                            </flux:text>
+                        </div>
                     </div>
                     <flux:text class="mt-1">{{ $form->description }}</flux:text>
                 </div>

@@ -18,6 +18,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::view('teacher/permission-forms', 'teacher.permission-forms.index')->name('teacher.permission-forms.index');
     Route::view('teacher/permission-forms/create', 'teacher.permission-forms.create')->name('teacher.permission-forms.create');
+
+    Route::get('teacher/permission-forms/{form}/edit', function (\App\Models\PermissionForm $form) {
+        return view('teacher.permission-forms.edit', ['form' => $form]);
+    })->name('teacher.permission-forms.edit');
 });
 // de route /admin/trips/create is nu ook beschermd door de auth, verified, en role:admin middlewares, alleen admins kunnen deze route bereiken en een nieuwe trip aanmaken.
 // admin routes — protected by auth, verified, and role:admin middleware
