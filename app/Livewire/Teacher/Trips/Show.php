@@ -58,6 +58,7 @@ class Show extends Component
         ])->save();
 
         Flux::toast(variant: 'success', text: 'Payment marked as paid.');
+        $this->trip->refresh();
     }
 
     public function markUnpaid(int $studentId): void
@@ -67,6 +68,7 @@ class Show extends Component
             ->update(['status' => Payment::STATUS_PENDING, 'paid_at' => null]);
 
         Flux::toast(variant: 'success', text: 'Payment marked as pending.');
+        $this->trip->refresh();
     }
 
     public function markSigned(int $studentId, int $guardianId): void
@@ -85,6 +87,7 @@ class Show extends Component
         ]);
 
         Flux::toast(variant: 'success', text: 'Form marked as signed.');
+        $this->trip->refresh();
     }
 
     public function markUnsigned(int $studentId): void
@@ -94,6 +97,7 @@ class Show extends Component
             ->delete();
 
         Flux::toast(variant: 'success', text: 'Form signature removed.');
+        $this->trip->refresh();
     }
 
     public function render()

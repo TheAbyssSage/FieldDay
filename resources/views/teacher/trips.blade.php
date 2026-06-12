@@ -1,3 +1,3 @@
 <x-layouts::app :title="__('Trips')">
-    <livewire:admin.trips.index />
+    <livewire:teacher.trips.index />
 </x-layouts::app>
