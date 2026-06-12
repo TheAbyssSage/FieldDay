@@ -4,6 +4,8 @@ namespace App\Livewire\Guardian;
 
 use App\Models\FieldTrip;
 use App\Models\Payment;
+use App\Models\Student;
+use Flux\Flux;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -49,5 +51,34 @@ class Dashboard extends Component
             'pendingCount' => $pendingCount,
             'paidCount' => $paidCount,
         ]);
+    }
+
+    /**
+     * Mark a payment as paid for a specific student on a specific trip.
+     * Creates the payment record if it doesn't exist yet (firstOrCreate).
+     * Also serves as parental permission confirmation for free trips.
+     */
+    public function pay(FieldTrip $trip, Student $student): void
+    {
+        // Find existing payment or create a new one with pending status
+        $payment = Payment::firstOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'student_id' => $student->id,
+                'field_trip_id' => $trip->id,
+            ],
+            [
+                'amount' => $trip->cost ?? 0,
+                'status' => Payment::STATUS_PENDING,
+            ],
+        );
+
+        // Mark as paid with current timestamp
+        $payment->update([
+            'status' => Payment::STATUS_PAID,
+            'paid_at' => now(),
+        ]);
+
+        Flux::toast(variant: 'success', text: "Payment marked as paid for {$student->first_name} — {$trip->title}.");
     }
 }
