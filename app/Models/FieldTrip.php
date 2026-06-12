@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,10 +10,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FieldTrip extends Model
 {
-    // softdelete gebruiken om de trips te kunnen verwijderen zonder ze echt uit de DB te verwijderen, we kunnen ze later nog herstellen als dat nodig is.
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
     // STATUS_CANCELLED constant toevoegen aan de lijst van mogelijke statussen voor een trip, zodat we ook trips kunnen markeren als geannuleerd, en deze kunnen filteren of tonen in de UI.
     public const STATUS_CANCELLED = 'cancelled';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_OPEN = 'open';
     public const STATUSES = ['open', 'completed', 'cancelled'];
     protected $fillable = [
         'title',
