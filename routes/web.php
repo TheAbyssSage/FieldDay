@@ -7,8 +7,14 @@ Route::view('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        if (auth()->user()->hasRole('admin')) {
+        $user = request()->user();
+
+        if ($user?->hasRole('admin')) {
             return redirect()->route('admin.dashboard');
+        }
+
+        if ($user?->hasRole('guardian')) {
+            return redirect()->route('guardian.dashboard');
         }
 
         return view('dashboard');
