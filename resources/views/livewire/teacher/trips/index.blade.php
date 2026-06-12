@@ -26,7 +26,11 @@
                 <tbody class="divide-y divide-zinc-200 dark:divide-zinc-700">
                     @foreach ($trips as $trip)
                         <tr>
-                            <td class="px-4 py-3 font-medium">{{ $trip->title }}</td>
+                            <td class="px-4 py-3 font-medium">
+                                <a href="{{ route('teacher.trips.show', $trip) }}" class="underline hover:text-zinc-500" wire:navigate>
+                                    {{ $trip->title }}
+                                </a>
+                            </td>
                             <td class="px-4 py-3">{{ $trip->location }}</td>
                             <td class="px-4 py-3">{{ $trip->classroom->name }}</td>
                             <td class="px-4 py-3">{{ $trip->begin_date->format('M j, Y') }}</td>
@@ -41,7 +45,10 @@
                                 </span>
                             </td>
                             <td class="px-4 py-3">
-                                <flux:button size="sm" :href="route('teacher.trips.edit', $trip)" wire:navigate>Edit</flux:button>
+                                <div class="flex gap-2">
+                                    <flux:button size="sm" :href="route('teacher.trips.show', $trip)" wire:navigate>View</flux:button>
+                                    <flux:button size="sm" :href="route('teacher.trips.edit', $trip)" wire:navigate>Edit</flux:button>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

@@ -18,6 +18,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::view('teacher/trips', 'teacher.trips.index')->name('teacher.trips.index');
 
+    Route::get('teacher/trips/{trip}', function (\App\Models\FieldTrip $trip) {
+        return view('teacher.trips.show', ['trip' => $trip]);
+    })->name('teacher.trips.show');
+
     Route::get('teacher/trips/{trip}/edit', function (\App\Models\FieldTrip $trip) {
         return view('teacher.trips.edit', ['trip' => $trip]);
     })->name('teacher.trips.edit');
