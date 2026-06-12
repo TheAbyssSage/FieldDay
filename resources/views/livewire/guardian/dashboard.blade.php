@@ -1,19 +1,19 @@
 <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl p-4">
     <flux:heading size="xl">Welcome, {{ auth()->user()->name }}</flux:heading>
 
-    {{-- Summary cards: students, pending payments, paid payments --}}
-    <div class="grid grid-cols-3 gap-4">
-        <div class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+    {{-- Summary cards: compact stats --}}
+    <div class="flex gap-4">
+        <div class="rounded-lg border border-zinc-200 px-4 py-2 dark:border-zinc-700">
             <flux:text size="sm" class="text-zinc-500">My Students</flux:text>
-            <flux:heading size="xl">{{ $students->count() }}</flux:heading>
+            <flux:heading size="lg">{{ $students->count() }}</flux:heading>
         </div>
-        <div class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+        <div class="rounded-lg border border-zinc-200 px-4 py-2 dark:border-zinc-700">
             <flux:text size="sm" class="text-zinc-500">Pending</flux:text>
-            <flux:heading size="xl">{{ $pendingCount }}</flux:heading>
+            <flux:heading size="lg">{{ $pendingCount }}</flux:heading>
         </div>
-        <div class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+        <div class="rounded-lg border border-zinc-200 px-4 py-2 dark:border-zinc-700">
             <flux:text size="sm" class="text-zinc-500">Paid</flux:text>
-            <flux:heading size="xl">{{ $paidCount }}</flux:heading>
+            <flux:heading size="lg">{{ $paidCount }}</flux:heading>
         </div>
     </div>
 
@@ -66,8 +66,8 @@
                                     @endif
                                 </td>
                                 <td class="px-4 py-3">
-                                    {{-- Show "Mark as Paid" button unless already paid. Includes free trips (cost=0) as parental permission. --}}
-                                    @if (! $payment || $payment->status !== 'paid')
+                                    {{-- Show "Mark as Paid" button only for open trips that aren't already paid --}}
+                                    @if ($trip->status === 'open' && (! $payment || $payment->status !== 'paid'))
                                         <flux:button
                                             size="sm"
                                             variant="primary"
@@ -85,6 +85,11 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+
+        {{-- Pagination links --}}
+        <div class="mt-4">
+            {{ $trips->links() }}
         </div>
     @endif
 </div>
