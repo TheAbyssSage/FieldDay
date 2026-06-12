@@ -13,6 +13,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         return view('dashboard');
     })->name('dashboard');
+
+    Route::view('new-trip', 'new-trip')->name('new-trip.index');
 });
 // de route /admin/trips/create is nu ook beschermd door de auth, verified, en role:admin middlewares, alleen admins kunnen deze route bereiken en een nieuwe trip aanmaken.
 // admin routes — protected by auth, verified, and role:admin middleware
