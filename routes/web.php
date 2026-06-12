@@ -50,6 +50,11 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
         return view('admin.trips.edit', ['trip' => $trip]);
     })->name('admin.trips.edit');
 });
+
+// guardian routes — protected by auth, verified, and role:guardian middleware
+Route::middleware(['auth', 'verified', 'role:guardian'])->group(function () {
+    Route::view('guardian/dashboard', 'guardian.dashboard')->name('guardian.dashboard');
+});
 // de require dir settings.php zorgt ervoor dat we de routes in routes/settings.php ook laden, deze routes zijn voor het beheren van de instellingen van de applicatie, en zijn ook beschermd door de auth, verified, en role:admin middlewares.
 require __DIR__.'/settings.php';
 
