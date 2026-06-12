@@ -1,6 +1,17 @@
 <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl p-4">
     <flux:heading size="xl">Welcome, {{ auth()->user()->name }}</flux:heading>
 
+    <div class="grid grid-cols-2 gap-4">
+        <div class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+            <flux:text size="sm" class="text-zinc-500">Upcoming Trips</flux:text>
+            <flux:heading size="xl">{{ $upcomingCount }}</flux:heading>
+        </div>
+        <div class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+            <flux:text size="sm" class="text-zinc-500">Pending Payments</flux:text>
+            <flux:heading size="xl">{{ $pendingPayments }}</flux:heading>
+        </div>
+    </div>
+
     <flux:heading size="lg" class="mt-4">{{ __('My Trips') }}</flux:heading>
 
     @if ($trips->isEmpty())
@@ -23,7 +34,7 @@
                     @foreach ($trips as $trip)
                         <tr>
                             <td class="px-4 py-3 font-medium">
-                                <a href="{{ route('teacher.trips.edit', $trip) }}" class="underline hover:text-zinc-500" wire:navigate>
+                                <a href="{{ route('teacher.trips.show', $trip) }}" class="underline hover:text-zinc-500" wire:navigate>
                                     {{ $trip->title }}
                                 </a>
                             </td>
